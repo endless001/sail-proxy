@@ -66,7 +66,7 @@ internal static class SailParser
 
         var cluster = clusters[key];
         cluster.ClusterId = key;
-        cluster.RequestConfig = ingressContext.Options.RequestConfig;
+        cluster.HttpRequestConfig = ingressContext.Options.HttpRequestConfig;
         cluster.LoadBalancingPolicy = ingressContext.Options.LoadBalancingPolicy;
         cluster.SessionAffinity = ingressContext.Options.SessionAffinity;
         cluster.HealthCheck = ingressContext.Options.HealthCheck;
@@ -196,7 +196,7 @@ internal static class SailParser
                 _ => new Version(1, 0)
             };
 
-            ingressContext.Options.RequestConfig = new ForwarderRequestConfig
+            ingressContext.Options.HttpRequestConfig = new ForwarderRequestConfig
             {
                 Version = version,
                 VersionPolicy = HttpVersionPolicy.RequestVersionExact

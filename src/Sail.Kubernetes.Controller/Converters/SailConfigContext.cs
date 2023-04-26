@@ -19,7 +19,8 @@ internal class SailConfigContext
             HealthCheck = c.HealthCheck,
             LoadBalancingPolicy = c.LoadBalancingPolicy,
             SessionAffinity = c.SessionAffinity,
-            HttpClient = c.HttpClientConfig
+            HttpClient = c.HttpClientConfig,
+            HttpRequest = c.HttpRequestConfig
         }).ToList();
     }
 
