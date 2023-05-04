@@ -21,5 +21,7 @@ RUN dotnet publish "Sail.Proxy.csproj" -c Release -o /app/publish /p:UseAppHost=
 
 FROM base AS final
 WORKDIR /app
+COPY ["script/tls.crt", "/etc/ssl/certs/"]
+COPY ["script/tls.key", "/etc/ssl/certs/"]
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "Sail.Proxy.dll"]

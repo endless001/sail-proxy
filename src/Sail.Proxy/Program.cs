@@ -1,5 +1,3 @@
-using System.Net;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Sail.Proxy;
 
 public static class Program
@@ -9,6 +7,9 @@ public static class Program
         Host.CreateDefaultBuilder(args)
             .ConfigureWebHost(_ => { })
             .ConfigureLogging(_ => { })
-            .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); }).Build().Run();
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.UseStartup<Startup>();
+            }).Build().Run();
     }
 }
