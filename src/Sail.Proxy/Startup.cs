@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Sail.Kubernetes.Protocol;
+using Sail.Metrics.Prometheus;
 
 namespace Sail.Proxy;
 
@@ -19,6 +20,7 @@ public class Startup
         services.AddCors();
         services.Configure<ReceiverOptions>(Configuration.Bind);
         services.AddHostedService<Receiver>();
+        services.AddAllPrometheusMetrics();
         services.AddKubernetesPlugin().AddReverseProxy().LoadFromMessages();
     }
 
