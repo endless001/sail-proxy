@@ -27,7 +27,7 @@ public class PrometheusKestrelMetrics : IMetricsConsumer<KestrelMetrics>
 
     private static readonly Gauge _currentConnections = global::Prometheus.Metrics.CreateGauge(
         "sail_kestrel_current_connections",
-        "Number of currently open incomming connections"
+        "Number of currently open incoming connections"
     );
 
     private static readonly Gauge _connectionQueueLength = global::Prometheus.Metrics.CreateGauge(

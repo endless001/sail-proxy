@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using Prometheus;
 using Sail.Kubernetes.Protocol;
 using Sail.Metrics.Prometheus;
 
@@ -30,6 +31,10 @@ public class Startup
         app.UseCors();
         app.UseAuthentication();
         app.UseAuthorization();
-        app.UseEndpoints(endpoints => { endpoints.MapReverseProxy(); });
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapReverseProxy();
+            endpoints.MapMetrics();
+        });
     }
 }
