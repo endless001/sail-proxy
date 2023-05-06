@@ -9,6 +9,7 @@ FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 COPY ["src/Sail.Proxy/Sail.Proxy.csproj", "src/Sail.Proxy/"]
 COPY ["src/Sail.Kubernetes.Protocol/Sail.Kubernetes.Protocol.csproj", "src/Sail.Kubernetes.Protocol/"]
+COPY ["src/Sail.Metrics.Prometheus/Sail.Metrics.Prometheus.csproj", "src/Sail.Metrics.Prometheus/"]
 COPY ["packages/OperatorFramework/src/Controller/Microsoft.Kubernetes.Controller.csproj", "packages/OperatorFramework/src/Controller/"]
 COPY ["packages/OperatorFramework/src/Core/Microsoft.Kubernetes.Core.csproj", "packages/OperatorFramework/src/Core/"]
 RUN dotnet restore "src/Sail.Proxy/Sail.Proxy.csproj"
