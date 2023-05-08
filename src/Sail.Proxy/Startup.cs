@@ -1,6 +1,4 @@
-﻿using System.Text;
-using Microsoft.IdentityModel.Tokens;
-using Prometheus;
+﻿using Prometheus;
 using Sail.Kubernetes.Protocol;
 using Sail.Metrics.Prometheus;
 
@@ -23,10 +21,13 @@ public class Startup
         services.AddHostedService<Receiver>();
         services.AddAllPrometheusMetrics();
         services.AddKubernetesPlugin().AddReverseProxy().LoadFromMessages();
+
+        services.AddRequestMetricCollection();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
+        app.UseRequestMetricCollection();
         app.UseRouting();
         app.UseCors();
         app.UseAuthentication();

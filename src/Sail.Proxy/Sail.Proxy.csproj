@@ -8,6 +8,7 @@
   
   <ItemGroup>
     <ProjectReference Include="..\Sail.Kubernetes.Protocol\Sail.Kubernetes.Protocol.csproj" />
+    <ProjectReference Include="..\Sail.Logging\Sail.Logging.csproj" />
     <ProjectReference Include="..\Sail.Metrics.Prometheus\Sail.Metrics.Prometheus.csproj" />
   </ItemGroup>
   
