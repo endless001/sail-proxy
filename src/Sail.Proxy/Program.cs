@@ -9,6 +9,7 @@ public static class Program
             .ConfigureLogging(_ => { })
             .ConfigureWebHostDefaults(webBuilder =>
             {
+                webBuilder.UseKubernetesReverseProxyCertificateSelector();
                 webBuilder.UseStartup<Startup>();
             }).Build().Run();
     }

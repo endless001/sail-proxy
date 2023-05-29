@@ -2,8 +2,8 @@
 
 public class RateLimiterConfig
 {
-    public string Name { get; set; }
-    public int PermitLimit { get; set; }
-    public int Window { get; set; }
-    public int QueueLimit { get; set; }
+    public string Name { get; init; }
+    public int PermitLimit { get; init; }
+    public int Window { get; init; }
+    public int QueueLimit { get; init; }
 }

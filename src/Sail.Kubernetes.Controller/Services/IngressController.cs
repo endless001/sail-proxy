@@ -29,6 +29,7 @@ public class IngressController : BackgroundHostedService
         IResourceInformer<V1Endpoints> endpointsInformer,
         IResourceInformer<V1IngressClass> ingressClassInformer,
         IResourceInformer<V1beta1Plugin> pluginInformer,
+        IResourceInformer<V1Secret> secretInformer,
         IHostApplicationLifetime hostApplicationLifetime,
         ILogger<IngressController> logger)
         : base(hostApplicationLifetime, logger)
@@ -58,6 +59,11 @@ public class IngressController : BackgroundHostedService
             throw new ArgumentNullException(nameof(pluginInformer));
         }
 
+        if (secretInformer is null)
+        {
+            throw new ArgumentNullException(nameof(secretInformer));
+        }
+        
         if (logger is null)
         {
             throw new ArgumentNullException(nameof(logger));
@@ -69,7 +75,8 @@ public class IngressController : BackgroundHostedService
             endpointsInformer.Register(Notification),
             ingressClassInformer.Register(Notification),
             ingressInformer.Register(Notification),
-            pluginInformer.Register(Notification)
+            pluginInformer.Register(Notification),
+            secretInformer.Register(Notification)
         };
         _registrationsReady = false;
         serviceInformer.StartWatching();
@@ -77,7 +84,8 @@ public class IngressController : BackgroundHostedService
         ingressClassInformer.StartWatching();
         ingressInformer.StartWatching();
         pluginInformer.StartWatching();
-
+        secretInformer.StartWatching();
+        
         _queue = new ProcessingRateLimitedQueue<QueueItem>(perSecond: 0.5, burst: 1);
 
         _cache = cache ?? throw new ArgumentNullException(nameof(cache));
@@ -129,6 +137,10 @@ public class IngressController : BackgroundHostedService
         }
     }
 
+    private void Notification(WatchEventType eventType,V1Secret resource)
+    {
+        _cache.Update(eventType, resource);
+    }
     private void Notification(WatchEventType eventType,V1beta1Plugin resource)
     {
         if (_cache.Update(eventType, resource))
@@ -136,6 +148,7 @@ public class IngressController : BackgroundHostedService
             NotificationIngressChanged();
         }
     }
+    
     private void Notification(WatchEventType eventType, V1IngressClass resource)
     {
         _cache.Update(eventType, resource);

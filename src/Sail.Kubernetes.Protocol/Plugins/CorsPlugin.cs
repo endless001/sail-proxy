@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Cors.Infrastructure;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Options;
 using Sail.Kubernetes.Protocol.Configuration;
 
@@ -12,7 +13,7 @@ public class CorsPlugin : IPlugin
     {
         _options = options.Value;
     }
-
+    
     public Task ApplyAsync(IEnumerable<PluginConfig> plugins)
     {
         var corsPolicies = plugins.Where(x => x.Cors is not null).Select(x => x.Cors);

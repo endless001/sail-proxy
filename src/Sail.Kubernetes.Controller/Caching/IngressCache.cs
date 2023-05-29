@@ -83,6 +83,16 @@ public class IngressCache : ICache
         return true;
     }
 
+    public void Update(WatchEventType eventType, V1Secret secret)
+    {
+        if (!string.Equals(secret.Type, "kubernetes.io/tls", StringComparison.OrdinalIgnoreCase))
+        {
+            return;
+        }
+
+        Namespace(secret.Namespace()).Update(eventType, secret);
+    }
+
     public ImmutableList<string> Update(WatchEventType eventType, V1Service service)
     {
         if (service is null)
@@ -142,7 +152,20 @@ public class IngressCache : ICache
         return plugins;
     }
 
- 
+    public IEnumerable<SecretData> GetSecrets()
+    {
+        var secrets = new List<SecretData>();
+        lock (_sync)
+        {
+            foreach (var ns in _namespaceCaches)
+            {
+                secrets.AddRange(ns.Value.GetSecrets());
+            }
+        }
+
+        return secrets;
+    }
+
 
     private NamespaceCache Namespace(string key)
     {

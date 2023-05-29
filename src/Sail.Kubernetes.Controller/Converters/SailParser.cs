@@ -1,5 +1,7 @@
 ﻿using k8s.Models;
 using Sail.Kubernetes.Controller.Caching;
+using Sail.Kubernetes.Controller.Utilities;
+using Sail.Kubernetes.Protocol.Configuration;
 using YamlDotNet.Serialization;
 using Yarp.ReverseProxy.Configuration;
 using Yarp.ReverseProxy.Forwarder;
@@ -27,6 +29,11 @@ internal static class SailParser
         foreach (var rule in spec.Rules ?? Enumerable.Empty<V1IngressRule>())
         {
             HandleIngressRule(ingressContext, ingressContext.Endpoints, defaultSubsets, rule, configContext);
+        }
+
+        foreach (var tls in spec.Tls)
+        {
+            HandleTls(ingressContext, configContext, tls);
         }
     }
 
@@ -107,7 +114,6 @@ internal static class SailParser
                     var uri = $"{protocol}://{address.Ip}:{port.Port}";
                     cluster.Destinations[uri] = new DestinationConfig
                     {
-
                         Address = uri
                     };
                 }
@@ -133,6 +139,27 @@ internal static class SailParser
         }
 
         return options;
+    }
+
+    private static void HandleTls(SailIngressContext ingressContext, SailConfigContext configContext, V1IngressTLS tls)
+    {
+
+        var secretName = tls.SecretName;
+        var hosts = tls.Hosts;
+        var secret = ingressContext.Secrets.SingleOrDefault(s => s.Metadata.Name == secretName);
+        var certificate = CertificateHelper.ConvertCertificate(secret?.Data);
+
+        if (certificate is null)
+        {
+            return;
+        }
+
+        configContext.Tls.Add(new TlsConfig
+        {
+            HostNames = hosts.ToList(),
+            Cert = certificate.TlsCertKey,
+            Key = certificate.TlsPrivateKeyKey
+        });
     }
 
     private static void HandlePlugin(SailIngressContext ingressContext, string pluginName)

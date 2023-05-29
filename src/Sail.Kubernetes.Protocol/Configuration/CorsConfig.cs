@@ -2,8 +2,8 @@
 
 public class CorsConfig
 {
-    public string Name { get; set; }
-    public List<string> AllowOrigins { get; set; } 
-    public List<string> AllowMethods { get; set; } 
-    public List<string> AllowHeaders { get; set; }
+    public string Name { get; init; }
+    public List<string> AllowOrigins { get; init; } 
+    public List<string> AllowMethods { get; init; } 
+    public List<string> AllowHeaders { get; init; }
 }

@@ -2,7 +2,7 @@
 
 public class PluginConfig
 {
-    public JwtBearerConfig JwtBearer { get; set; }
-    public CorsConfig Cors { get; set; }
-    public RateLimiterConfig RateLimiter { get; set; }
+    public JwtBearerConfig JwtBearer { get; init; }
+    public CorsConfig Cors { get; init; }
+    public RateLimiterConfig RateLimiter { get; init; }
 }

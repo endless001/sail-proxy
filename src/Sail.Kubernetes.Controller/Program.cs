@@ -45,6 +45,7 @@ builder.Services.RegisterResourceInformer<V1Service>();
 builder.Services.RegisterResourceInformer<V1Endpoints>();
 builder.Services.RegisterResourceInformer<V1IngressClass>();
 builder.Services.RegisterResourceInformer<V1beta1Plugin>();
+builder.Services.RegisterResourceInformer<V1Secret>();
 
 var app = builder.Build();
 app.UseRouting();

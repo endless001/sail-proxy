@@ -1,8 +1,8 @@
 ﻿namespace Sail.Kubernetes.Protocol.Configuration;
 
-public struct TlsConfig
+public class TlsConfig
 {
-    public string HostName { get; set; }
-    public string Cert { get; set; }
-    public string Key { get; set; }
+    public List<string> HostNames { get; init; }
+    public string Cert { get; init; }
+    public string Key { get; init; }
 }

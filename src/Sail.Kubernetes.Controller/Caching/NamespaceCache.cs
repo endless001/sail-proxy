@@ -16,6 +16,31 @@ public class NamespaceCache
     private readonly Dictionary<string, ServiceData> _serviceData = new();
     private readonly Dictionary<string, Endpoints> _endpointsData = new();
     private readonly Dictionary<string, PluginData> _pluginData = new();
+    private readonly Dictionary<string, SecretData> _secretData = new();
+
+
+    public void Update(WatchEventType eventType, V1Secret secret)
+    {
+        if (secret is null)
+        {
+            throw new ArgumentNullException(nameof(secret));
+        }
+
+        var secretName = secret.Name();
+
+        lock (_sync)
+        {
+            switch (eventType)
+            {
+                case WatchEventType.Added or WatchEventType.Modified:
+                    _secretData[secretName] = new SecretData(secret);
+                    break;
+                case WatchEventType.Deleted:
+                    _secretData.Remove(secretName);
+                    break;
+            }
+        }
+    }
 
     public void Update(WatchEventType eventType, V1beta1Plugin plugin)
     {
@@ -204,9 +229,15 @@ public class NamespaceCache
     {
         return _pluginData.Values;
     }
+
     public IEnumerable<IngressData> GetIngresses()
     {
         return _ingressData.Values;
+    }
+
+    public IEnumerable<SecretData> GetSecrets()
+    {
+        return _secretData.Values;
     }
 
     public bool IngressExists(V1Ingress ingress)

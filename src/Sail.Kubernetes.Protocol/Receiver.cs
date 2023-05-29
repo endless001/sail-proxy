@@ -5,7 +5,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Kubernetes.Controller.Hosting;
 using Microsoft.Kubernetes.Controller.Rate;
+using Sail.Kubernetes.Protocol.Certificates;
 using Sail.Kubernetes.Protocol.Configuration;
+using Sail.Kubernetes.Protocol.Options;
 using Sail.Kubernetes.Protocol.Plugins;
 
 namespace Sail.Kubernetes.Protocol;
@@ -16,13 +18,15 @@ public class Receiver : BackgroundHostedService
     private readonly Limiter _limiter;
     private readonly IUpdateConfig _proxyConfigProvider;
     private readonly IPluginUpdater _pluginUpdater;
+    private readonly IServerCertificateSelector _serverCertificateSelector;
 
     public Receiver(
         IOptions<ReceiverOptions> options,
         IHostApplicationLifetime hostApplicationLifetime,
         ILogger<Receiver> logger,
         IUpdateConfig proxyConfigProvider,
-        IPluginUpdater pluginUpdater) : base(hostApplicationLifetime, logger)
+        IPluginUpdater pluginUpdater,
+        IServerCertificateSelector serverCertificateSelector) : base(hostApplicationLifetime, logger)
     {
         if (options is null)
         {
@@ -33,6 +37,7 @@ public class Receiver : BackgroundHostedService
         _limiter = new Limiter(new Limit(2), 3);
         _proxyConfigProvider = proxyConfigProvider;
         _pluginUpdater = pluginUpdater;
+        _serverCertificateSelector = serverCertificateSelector;
     }
 
     public override async Task RunAsync(CancellationToken cancellationToken)
@@ -64,6 +69,7 @@ public class Receiver : BackgroundHostedService
                     {
                         await _pluginUpdater.UpdateAsync(message.Plugins);
                         await _proxyConfigProvider.UpdateAsync(message.Routes, message.Cluster).ConfigureAwait(false);
+                        await _serverCertificateSelector.ReloadAsync(message.Tls);
                     }
                 }
             }

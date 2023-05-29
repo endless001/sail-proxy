@@ -1,4 +1,4 @@
-﻿namespace Sail.Kubernetes.Protocol;
+﻿namespace Sail.Kubernetes.Protocol.Options;
 
 public class ReceiverOptions
 {
