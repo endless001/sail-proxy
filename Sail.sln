@@ -27,10 +27,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Kubernetes.Operat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Kubernetes.Testing", "packages\OperatorFramework\src\Testing\Microsoft.Kubernetes.Testing.csproj", "{C08FFAD9-F198-482A-83C0-547806845E93}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sail.Metrics.Prometheus", "src\Sail.Metrics.Prometheus\Sail.Metrics.Prometheus.csproj", "{B716CBB1-7D6A-49D4-A87D-FC6C993927C5}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sail.Logging", "src\Sail.Logging\Sail.Logging.csproj", "{49AEEE32-E30E-4C30-8C1C-22CB585C4829}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -50,8 +46,6 @@ Global
 		{BEC78E7C-23B6-4D26-8DBE-35CF1D5A511E} = {2DD730DD-AE0C-4ADA-932B-90928291EB0D}
 		{9007B1A7-CDE6-4607-BB9D-E9A0AFD675A5} = {2DD730DD-AE0C-4ADA-932B-90928291EB0D}
 		{C08FFAD9-F198-482A-83C0-547806845E93} = {2DD730DD-AE0C-4ADA-932B-90928291EB0D}
-		{B716CBB1-7D6A-49D4-A87D-FC6C993927C5} = {30F46012-CF65-4CC0-9DD4-36760543E0F0}
-		{49AEEE32-E30E-4C30-8C1C-22CB585C4829} = {30F46012-CF65-4CC0-9DD4-36760543E0F0}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{941D1D71-2D76-4DDE-9CBA-2F8F9C652582}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -86,13 +80,5 @@ Global
 		{C08FFAD9-F198-482A-83C0-547806845E93}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C08FFAD9-F198-482A-83C0-547806845E93}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C08FFAD9-F198-482A-83C0-547806845E93}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B716CBB1-7D6A-49D4-A87D-FC6C993927C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B716CBB1-7D6A-49D4-A87D-FC6C993927C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B716CBB1-7D6A-49D4-A87D-FC6C993927C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B716CBB1-7D6A-49D4-A87D-FC6C993927C5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{49AEEE32-E30E-4C30-8C1C-22CB585C4829}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{49AEEE32-E30E-4C30-8C1C-22CB585C4829}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{49AEEE32-E30E-4C30-8C1C-22CB585C4829}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{49AEEE32-E30E-4C30-8C1C-22CB585C4829}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

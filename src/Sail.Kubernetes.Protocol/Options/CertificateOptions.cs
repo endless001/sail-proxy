@@ -2,6 +2,6 @@
 
 public class CertificateOptions
 {
-    public string Path { get; set; }
-    public string KeyPath { get; set; }
+    public string DefaultPath { get; set; }
+    public string DefaultKeyPath { get; set; }
 }

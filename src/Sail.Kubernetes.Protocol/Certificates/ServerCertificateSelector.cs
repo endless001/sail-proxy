@@ -11,6 +11,7 @@ public class ServerCertificateSelector : IServerCertificateSelector
 {
     private List<TlsConfig> _tls = new();
     private readonly CertificateOptions _options;
+
     public ServerCertificateSelector(IOptions<CertificateOptions> options)
     {
         _options = options.Value;
@@ -18,14 +19,15 @@ public class ServerCertificateSelector : IServerCertificateSelector
 
     public X509Certificate2 GetCertificate(ConnectionContext connectionContext, string domainName)
     {
-        var tls = _tls.SingleOrDefault(x => x.HostNames.Any(h => h == domainName));
+        var tls = _tls.FirstOrDefault(x => x.HostNames.Any(h => h == domainName));
 
         if (tls is null)
         {
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                return X509Certificate2.CreateFromPemFile(_options.Path, _options.KeyPath);
+                return X509Certificate2.CreateFromPemFile(_options.DefaultPath, _options.DefaultKeyPath);
             {
-                using var convertedCertificate = X509Certificate2.CreateFromPemFile(_options.Path, _options.KeyPath);
+                using var convertedCertificate =
+                    X509Certificate2.CreateFromPemFile(_options.DefaultPath, _options.DefaultKeyPath);
                 return new X509Certificate2(convertedCertificate.Export(X509ContentType.Pkcs12));
             }
         }
