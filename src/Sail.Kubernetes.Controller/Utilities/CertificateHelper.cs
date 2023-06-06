@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using k8s.Models;
 using Sail.Kubernetes.Controller.Models;
 
 namespace Sail.Kubernetes.Controller.Utilities;
@@ -15,7 +14,7 @@ internal static class CertificateHelper
         {
             var cert = data[TlsCertKey];
             var privateKey = data[TlsPrivateKeyKey];
-            
+
             if (cert is null || cert.Length == 0 || privateKey is null || privateKey.Length == 0)
             {
                 return null;
@@ -26,7 +25,7 @@ internal static class CertificateHelper
 
             return new Certificate(certString, privateString);
         }
-        catch (Exception)
+        catch
         {
         }
 
