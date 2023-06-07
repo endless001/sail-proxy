@@ -1,3 +1,4 @@
+using OpenTelemetry.Logs;
 using Sail.Proxy;
 
 public static class Program
@@ -6,7 +7,7 @@ public static class Program
     {
         Host.CreateDefaultBuilder(args)
             .ConfigureWebHost(_ => { })
-            .ConfigureLogging(_ => { })
+            .ConfigureLogging(builder => { builder.AddOpenTelemetry(options => { options.AddConsoleExporter(); }); })
             .ConfigureWebHostDefaults(webBuilder =>
             {
                 webBuilder.UseKubernetesReverseProxyCertificateSelector();

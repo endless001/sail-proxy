@@ -8,7 +8,13 @@
   
   <ItemGroup>
     <ProjectReference Include="..\Sail.Kubernetes.Protocol\Sail.Kubernetes.Protocol.csproj" />
-    <ProjectReference Include="..\Sail.Logging\Sail.Logging.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.5.0" />
+    <PackageReference Include="OpenTelemetry.Exporter.Prometheus.AspNetCore" Version="1.5.0-rc.1" />
+    <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.5.0" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.5.0-beta.1" />
   </ItemGroup>
   
 </Project>

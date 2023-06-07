@@ -8,9 +8,9 @@ public class PerRequestMetrics : IDisposable
 
     public PerRequestMetrics()
     {
-        
+
     }
-    
+
     public void Dispose()
     {
         _meter.Dispose();

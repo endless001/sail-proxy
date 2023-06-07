@@ -1,4 +1,6 @@
-﻿using Sail.Kubernetes.Protocol;
+﻿using OpenTelemetry.Metrics;
+using OpenTelemetry.Trace;
+using Sail.Kubernetes.Protocol;
 using Sail.Kubernetes.Protocol.Certificates;
 using Sail.Kubernetes.Protocol.Options;
 
@@ -22,7 +24,18 @@ public class Startup
         services.Configure<CertificateOptions>(Configuration.GetSection("Certificate"));
         services.AddSingleton<IServerCertificateSelector, ServerCertificateSelector>();
         services.AddKubernetesPlugin().AddReverseProxy().LoadFromMessages();
-        
+
+        services.AddOpenTelemetry()
+            .WithTracing(builder => { builder.AddAspNetCoreInstrumentation().AddConsoleExporter(); })
+            .WithMetrics(builder =>
+            {
+                builder
+                    .AddMeter("Sail")
+                    .AddAspNetCoreInstrumentation();
+
+                builder.AddPrometheusExporter();
+            });
+
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -31,6 +44,7 @@ public class Startup
         app.UseCors();
         app.UseAuthentication();
         app.UseAuthorization();
+        app.UseOpenTelemetryPrometheusScrapingEndpoint();
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapReverseProxy();
