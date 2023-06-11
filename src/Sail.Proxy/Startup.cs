@@ -1,4 +1,7 @@
-﻿using OpenTelemetry.Metrics;
+﻿using System.Diagnostics;
+using OpenTelemetry.Exporter;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Sail.Kubernetes.Protocol;
 using Sail.Kubernetes.Protocol.Certificates;
@@ -23,19 +26,41 @@ public class Startup
         services.AddHostedService<Receiver>();
         services.Configure<CertificateOptions>(Configuration.GetSection("Certificate"));
         services.AddSingleton<IServerCertificateSelector, ServerCertificateSelector>();
-        services.AddKubernetesPlugin().AddReverseProxy().LoadFromMessages();
+
+        services.AddKubernetesPlugin()
+            .AddReverseProxy()
+            .ConfigureHttpClient((_, handler) =>
+            {
+                handler.ActivityHeadersPropagator = DistributedContextPropagator.CreatePassThroughPropagator();
+            }).LoadFromMessages();
 
         services.AddOpenTelemetry()
-            .WithTracing(builder => { builder.AddAspNetCoreInstrumentation().AddConsoleExporter(); })
+            .ConfigureResource(builder =>
+            {
+                builder.AddService(Configuration.GetValue<string>("ServiceName"));
+            })
+            .WithTracing(builder =>
+            {
+                builder.AddSource(Configuration.GetValue<string>("ServiceName"))
+                    .AddAspNetCoreInstrumentation()
+                    .AddHttpClientInstrumentation()
+                    .AddJaegerExporter();
+
+                builder.ConfigureServices(services =>
+                {
+                    services.Configure<JaegerExporterOptions>(Configuration.GetSection("Jaeger"));
+                });
+            })
             .WithMetrics(builder =>
             {
                 builder
-                    .AddMeter("Sail")
-                    .AddAspNetCoreInstrumentation();
+                    .AddMeter(Configuration.GetValue<string>("ServiceName"))
+                    .AddRuntimeInstrumentation()
+                    .AddAspNetCoreInstrumentation()
+                    .AddHttpClientInstrumentation();
 
                 builder.AddPrometheusExporter();
             });
-
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -44,10 +69,8 @@ public class Startup
         app.UseCors();
         app.UseAuthentication();
         app.UseAuthorization();
+
         app.UseOpenTelemetryPrometheusScrapingEndpoint();
-        app.UseEndpoints(endpoints =>
-        {
-            endpoints.MapReverseProxy();
-        });
+        app.UseEndpoints(endpoints => { endpoints.MapReverseProxy(); });
     }
 }
